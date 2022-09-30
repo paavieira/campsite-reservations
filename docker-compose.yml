@@ -1,0 +1,23 @@
+services:
+  reservations:
+    image: com.paavieira.campsites/reservations
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=production
+      - MONGODB_URI=mongodb://mongodb:27017/reservations
+    depends_on:
+      - mongodb
+  mongodb:
+    image: mongo
+    restart: always
+    ports:
+      - 27017:27017
+    command: [ "--replSet", "rs0", "--bind_ip_all" ]
+  init-mongodb:
+    image: mongo
+    restart: on-failure
+    command: mongosh --host mongodb --eval 'try { rs.status() } catch(e) { rs.initiate() }'
+    depends_on:
+      mongodb:
+        condition: service_started
