@@ -9,6 +9,7 @@ import com.paavieira.campsite.reservations.testing.RandomUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 
@@ -62,6 +63,14 @@ public class ReservationWriteRepositoryImplIntegrationTest extends MongoDBIntegr
     }
 
     @Test
+    public void modify_whenThereAreConflictingModifications_thenThrowsOptimisticLockingFailureException() {
+        final ModifyReservationTestCase testCase = new ModifyReservationTestCase();
+        writeRepository.create(testCase.reservation);
+        writeRepository.modify(testCase.modifiedReservation);
+        Assertions.assertThrows(OptimisticLockingFailureException.class, () -> writeRepository.modify(testCase.modifiedReservation));
+    }
+
+    @Test
     public void modify_whenCancelling_thenRemovesReservedDates() {
         final ModifyReservationTestCase testCase = new ModifyReservationTestCase();
         writeRepository.create(testCase.reservation);
@@ -83,7 +92,6 @@ public class ReservationWriteRepositoryImplIntegrationTest extends MongoDBIntegr
     private static class ModifyReservationTestCase {
         private final Reservation reservation;
         private final Reservation modifiedReservation;
-
         private final Reservation conflictingReservation;
 
         public ModifyReservationTestCase() {

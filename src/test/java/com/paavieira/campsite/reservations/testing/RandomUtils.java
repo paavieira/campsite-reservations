@@ -66,6 +66,8 @@ public class RandomUtils {
         return randomInt(4, 10);
     }
 
+    public static Long randomVersion() { return Long.valueOf(randomInt(0, 10));}
+
     public static Reservation randomValidReservation() {
         final String bookingIdentifier = randomId();
         final LocalDate creationDate = LocalDate.now();
@@ -73,7 +75,7 @@ public class RandomUtils {
         final LocalDate departureDate = arrivalDate.plusDays(randomInt(1, 3));
         final ReservationStatus status = ReservationStatus.ACTIVE;
         final User user = randomUser();
-        return Reservation.create(bookingIdentifier, creationDate, arrivalDate, departureDate, status, user);
+        return Reservation.create(bookingIdentifier, creationDate, arrivalDate, departureDate, status, user, Reservation.INITIAL_VERSION);
     }
 
     public static Availability randomAvailability() {

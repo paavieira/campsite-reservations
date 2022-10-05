@@ -16,6 +16,7 @@ import static com.paavieira.campsite.reservations.testing.RandomUtils.randomInt;
 import static com.paavieira.campsite.reservations.testing.RandomUtils.randomInvalidDuration;
 import static com.paavieira.campsite.reservations.testing.RandomUtils.randomUser;
 import static com.paavieira.campsite.reservations.testing.RandomUtils.randomValidDuration;
+import static com.paavieira.campsite.reservations.testing.RandomUtils.randomVersion;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -185,6 +186,7 @@ public class ReservationTest {
         private final LocalDate creationDate;
         private final ReservationStatus status;
         private final User user;
+        private final Long version;
 
         public TestCase(LocalDate arrivalDate, LocalDate departureDate) {
             this.arrivalDate = arrivalDate;
@@ -193,10 +195,11 @@ public class ReservationTest {
             this.creationDate = LocalDate.now();
             this.status = ReservationStatus.ACTIVE;
             this.user = randomUser();
+            this.version = randomVersion();
         }
 
         public Reservation createReservation() {
-            return Reservation.create(bookingIdentifier, creationDate, arrivalDate, departureDate, status, user);
+            return Reservation.create(bookingIdentifier, creationDate, arrivalDate, departureDate, status, user, version);
         }
 
         public Reservation modifyReservation(Reservation reservation) {

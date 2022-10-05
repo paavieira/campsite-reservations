@@ -38,7 +38,8 @@ public class CreateReservationServiceImplTest {
                     eq(testCase.command.getArrivalDate()),
                     eq(testCase.command.getDepartureDate()),
                     eq(ReservationStatus.ACTIVE),
-                    eq(testCase.command.getUser())
+                    eq(testCase.command.getUser()),
+                    eq(Reservation.INITIAL_VERSION)
             )).thenReturn(testCase.reservation);
             service.createReservation(testCase.command);
             verify(writeRepository, times(1)).create(testCase.reservation);

@@ -24,7 +24,8 @@ public class CreateReservationServiceImpl implements CreateReservationService {
                 command.getArrivalDate(),
                 command.getDepartureDate(),
                 ReservationStatus.ACTIVE,
-                command.getUser()
+                command.getUser(),
+                Reservation.INITIAL_VERSION
         );
         return this.reservationWriteRepository.create(reservation);
     }

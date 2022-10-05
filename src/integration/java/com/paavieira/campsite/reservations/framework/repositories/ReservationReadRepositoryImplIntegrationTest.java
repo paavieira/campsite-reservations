@@ -121,7 +121,8 @@ public class ReservationReadRepositoryImplIntegrationTest extends MongoDBIntegra
 
         public void assertEquals(List<Reservation> reservations) {
             Assertions.assertEquals(this.reservations.size(), reservations.size());
-            IntStream.range(0, this.reservations.size()).forEach(i -> AssertionsUtils.assertEquals(this.reservations.get(i), reservations.get(i)));
+            IntStream.range(0, this.reservations.size())
+                     .forEach(i -> AssertionsUtils.assertEquals(this.reservations.get(i), reservations.get(i)));
         }
 
         public void assertOnly(List<Reservation> actual, Reservation reservation) {

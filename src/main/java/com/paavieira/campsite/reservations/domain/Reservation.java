@@ -12,26 +12,30 @@ import java.util.stream.Collectors;
 import java.util.stream.LongStream;
 
 public class Reservation {
-    private final String bookingIdentifier;
+    public static final Long INITIAL_VERSION = 0L;
 
+    private final String bookingIdentifier;
     private final LocalDate creationDate;
     private final LocalDate arrivalDate;
     private final LocalDate departureDate;
     private final ReservationStatus status;
     private final User user;
+    private final Long version;
 
-    private Reservation(String bookingIdentifier,
-                        LocalDate creationDate,
-                        LocalDate arrivalDate,
-                        LocalDate departureDate,
-                        ReservationStatus status,
-                        User user) {
+    public Reservation(String bookingIdentifier,
+                       LocalDate creationDate,
+                       LocalDate arrivalDate,
+                       LocalDate departureDate,
+                       ReservationStatus status,
+                       User user,
+                       Long version) {
         this.bookingIdentifier = bookingIdentifier;
         this.creationDate = creationDate;
         this.arrivalDate = arrivalDate;
         this.departureDate = departureDate;
         this.status = status;
         this.user = user;
+        this.version = version;
     }
 
     public static Reservation create(String bookingIdentifier,
@@ -39,7 +43,8 @@ public class Reservation {
                                      LocalDate arrivalDate,
                                      LocalDate departureDate,
                                      ReservationStatus status,
-                                     User user) {
+                                     User user,
+                                     Long version) {
         if (departureDate.isBefore(arrivalDate) || departureDate.isEqual(arrivalDate)) {
             throw new InvalidDepartureDate(arrivalDate, departureDate);
         }
@@ -56,15 +61,15 @@ public class Reservation {
             throw new InvalidArrivalDate(arrivalDate);
         }
 
-        return new Reservation(bookingIdentifier, creationDate, arrivalDate, departureDate, status, user);
+        return new Reservation(bookingIdentifier, creationDate, arrivalDate, departureDate, status, user, version);
     }
 
     public Reservation modify(LocalDate arrivalDate, LocalDate departureDate) {
-        return Reservation.create(bookingIdentifier, creationDate, arrivalDate, departureDate, status, user);
+        return Reservation.create(bookingIdentifier, creationDate, arrivalDate, departureDate, status, user, version);
     }
 
     public Reservation cancel() {
-        return new Reservation(bookingIdentifier, creationDate, arrivalDate, departureDate, ReservationStatus.CANCELLED, user);
+        return new Reservation(bookingIdentifier, creationDate, arrivalDate, departureDate, ReservationStatus.CANCELLED, user, version);
     }
 
 
@@ -90,6 +95,10 @@ public class Reservation {
 
     public User getUser() {
         return user;
+    }
+
+    public Long getVersion() {
+        return version;
     }
 
     public Long getDuration() {

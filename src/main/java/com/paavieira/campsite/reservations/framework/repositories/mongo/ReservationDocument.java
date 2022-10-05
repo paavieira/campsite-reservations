@@ -4,6 +4,7 @@ import com.paavieira.campsite.reservations.domain.Reservation;
 import com.paavieira.campsite.reservations.domain.ReservationStatus;
 import com.paavieira.campsite.reservations.domain.User;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Version;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDate;
@@ -18,24 +19,28 @@ public class ReservationDocument {
     private LocalDate departureDate;
     private ReservationStatus status;
     private User user;
+    @Version
+    private Long version;
 
     public ReservationDocument(String bookingIdentifier,
                                LocalDate creationDate,
                                LocalDate arrivalDate,
                                LocalDate departureDate,
                                ReservationStatus status,
-                               User user) {
+                               User user,
+                               Long version) {
         this.bookingIdentifier = bookingIdentifier;
         this.creationDate = creationDate;
         this.arrivalDate = arrivalDate;
         this.departureDate = departureDate;
         this.status = status;
         this.user = user;
+        this.version = version;
     }
 
     public static ReservationDocument fromDomain(com.paavieira.campsite.reservations.domain.Reservation reservation) {
         return new ReservationDocument(reservation.getBookingIdentifier(), reservation.getCreationDate(), reservation.getArrivalDate(),
-                                       reservation.getDepartureDate(), reservation.getStatus(), reservation.getUser());
+                                       reservation.getDepartureDate(), reservation.getStatus(), reservation.getUser(), reservation.getVersion());
     }
 
     public String getBookingIdentifier() {
@@ -86,7 +91,15 @@ public class ReservationDocument {
         this.user = user;
     }
 
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
+    }
+
     public Reservation toDomain() {
-        return Reservation.create(bookingIdentifier, creationDate, arrivalDate, departureDate, status, user);
+        return Reservation.create(bookingIdentifier, creationDate, arrivalDate, departureDate, status, user, version);
     }
 }
